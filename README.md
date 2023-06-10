@@ -16,37 +16,37 @@ require_once 'FilterGuard.php';
 // Sanitizing a string
 $dirtyString = '<script>alert("XSS attack!");</script>';
 $cleanString = FilterGuard::string($dirtyString);
-echo $cleanString;
+var_dump($cleanString);
 
 // Sanitizing an integer
 $dirtyInteger = '123abc';
 $cleanInteger = FilterGuard::integer($dirtyInteger);
-echo $cleanInteger;
+var_dump($cleanInteger);
 
 // Sanitizing a float
 $dirtyFloat = '12.34xyz';
 $cleanFloat = FilterGuard::float($dirtyFloat);
-echo $cleanFloat;
+var_dump($cleanFloat);
 
 // Sanitizing a boolean value
-$dirtyBool = 'true';
+$dirtyBool = true;
 $cleanBool = FilterGuard::bool($dirtyBool);
-echo $cleanBool;
+var_dump($cleanBool);
 
 // Sanitizing an array
 $dirtyArray = ['<script>alert("XSS attack!");</script>', '123abc', '12.34xyz'];
 $cleanArray = FilterGuard::array($dirtyArray);
-echo $cleanArray;
+var_dump($cleanArray);
 
 // Sanitizing an object
 $dirtyObject = (object) ['dirtyString' => '<script>alert("XSS attack!");</script>'];
 $cleanObject = FilterGuard::object($dirtyObject);
-echo $cleanObject;
+var_dump($cleanObject);
 
 // Sanitizing an auto
 $dirtyValue = '<script>alert("XSS attack!");</script>';
 $cleanValue = FilterGuard::auto($dirtyValue);
-echo $cleanValue;
+var_dump($cleanValue);
 ```
 
 ## Contributions
