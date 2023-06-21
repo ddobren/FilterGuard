@@ -10,8 +10,10 @@ Include FilterGuard in your PHP project by including the main library file `Filt
 
 ```php
 <?php
-// Including FilterGuard library
-require_once 'FilterGuard.php';
+// require autoloader
+require_once 'vendor/autoload.php';
+
+use FilterGuard\FilterGuard;
 
 // Sanitizing a string
 $dirtyString = '<script>alert("XSS attack!");</script>';
