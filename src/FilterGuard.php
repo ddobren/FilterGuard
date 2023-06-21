@@ -117,7 +117,7 @@ class FilterGuard
      * @param mixed $valueType The value to sanitize.
      * @return mixed           The sanitized value.
      */
-    public static function auto($valueType): mixed
+    public static function auto(mixed $valueType): mixed
     {
         if (is_string($valueType)) {
             return FilterGuard::string($valueType);
