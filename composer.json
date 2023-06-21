@@ -1,0 +1,29 @@
+{
+   "name":"ddobren/filterguard",
+   "description":"Simple PHP package to sanitize PHP types",
+   "type":"library",
+   "license":"MIT",
+   "support":{
+      "issues":"https://github.com/ddobren/FilterGuard/issues",
+      "source":"https://github.com/ddobren/FilterGuard"
+   },
+   "authors":[
+      {
+         "name":"Dobren Dragojević",
+         "email":"dragojevicdobren@gmail.com"
+      }, 
+      {
+        "name": "Abhishek B",
+        "email": "abhishek.b4696@gmail.com"
+      }
+   ],
+   "require":{
+      "php":"^8.1"
+   },
+   "autoload":{
+      "psr-4":{
+         "FilterGuard\\":"src/"
+      }
+   },
+   "minimum-stability":"stable"
+}
