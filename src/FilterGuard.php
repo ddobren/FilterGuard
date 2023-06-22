@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * FilterGuard - PHP data sanitization library
  *
@@ -11,75 +13,131 @@
  * The library helps protect against common security vulnerabilities such as XSS and SQL injection.
  */
 
+namespace FilterGuard;
+
 class FilterGuard
 {
-    public static function string(string $stringValue): string
+    /**
+     * Sanitizes a string value.
+     *
+     * @param string $stringValue The string value to sanitize.
+     * @param string $encoding    (optional) The character encoding to use. Defaults to "UTF-8".
+     * @return string             The sanitized string value.
+     */
+    public static function sanitizeString($stringValue, string $encoding = "UTF-8"): string
     {
         $stringValue = strval($stringValue);
         $stringValue = strip_tags($stringValue);
-        $stringValue = htmlspecialchars($stringValue, ENT_QUOTES, "UTF-8");
+        $stringValue = htmlspecialchars($stringValue, ENT_QUOTES, $encoding);
         $stringValue = trim($stringValue);
         $stringValue = filter_var($stringValue, FILTER_SANITIZE_ADD_SLASHES);
         return $stringValue;
     }
 
-    public static function integer(int $integerValue): int
+    /**
+     * Sanitizes an integer value.
+     *
+     * @param mixed $integerValue The integer value to sanitize.
+     * @return mixed              The sanitized integer value.
+     */
+    public static function sanitizeInteger($integerValue): mixed
     {
         $integerValue = intval($integerValue);
         $integerValue = filter_var($integerValue, FILTER_SANITIZE_NUMBER_INT);
         return $integerValue;
     }
 
-    public static function float(float $floatValue): float
+    /**
+     * Sanitizes a float value.
+     *
+     * @param mixed $floatValue The float value to sanitize.
+     * @return mixed            The sanitized float value.
+     */
+    public static function sanitizeFloat($floatValue): mixed
     {
         $floatValue = floatval($floatValue);
-        $floatValue = filter_var($floatValue, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+        $floatValue = filter_var(
+            $floatValue,
+            FILTER_SANITIZE_NUMBER_FLOAT,
+            FILTER_FLAG_ALLOW_FRACTION
+        );
         return $floatValue;
     }
 
-    public static function bool(bool $boolValue): bool
+    /**
+     * Sanitizes a boolean value.
+     *
+     * @param mixed $boolValue The boolean value to sanitize.
+     * @return mixed           The sanitized boolean value.
+     */
+    public static function sanitizeBoolean($boolValue): mixed
     {
         $boolValue = boolval($boolValue);
-        $boolValue = filter_var($boolValue, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+        $boolValue = filter_var(
+            $boolValue,
+            FILTER_VALIDATE_BOOLEAN,
+            FILTER_NULL_ON_FAILURE
+        );
         return $boolValue;
     }
 
-    public static function array(array $arrayValue): array
+    /**
+     * Sanitizes an array value recursively.
+     *
+     * @param mixed $arrayValue The array value to sanitize.
+     * @return mixed            The sanitized array value.
+     */
+    public static function sanitizeArray($arrayValue): mixed
     {
-        $sanitizedArray = array();
+        $sanitizedArray = [];
         foreach ($arrayValue as $key => $value) {
             if (is_array($value)) {
-                $sanitizedArray[$key] = self::array($value);
+                $sanitizedArray[$key] = self::sanitizeArray($value);
             } else {
-                $sanitizedArray[$key] = self::auto($value);
+                $sanitizedArray[$key] = self::sanitizeAuto($value);
             }
         }
         return $sanitizedArray;
     }
 
-    public static function object(object $objectValue): object
+    /**
+     * Sanitizes an object value recursively.
+     *
+     * @param mixed $objectValue The object value to sanitize.
+     * @return mixed             The sanitized object value.
+     */
+    public static function sanitizeObject($objectValue): mixed
     {
         $objectValue = (array) $objectValue;
         $objectValue = array_map(function ($value) {
-            return self::auto($value);
+            return self::sanitizeAuto($value);
         }, $objectValue);
         return (object) $objectValue;
     }
 
-    public static function auto($valueType)
+    /**
+     * Automatically sanitizes a value based on its type.
+     *
+     * @param mixed $value The value to sanitize.
+     * @return mixed       The sanitized value.
+     */
+    public static function sanitizeAuto($value)
     {
-        if (is_string($valueType)) {
-            return FilterGuard::string($valueType);
-        } elseif (is_int($valueType)) {
-            return FilterGuard::integer($valueType);
-        } elseif (is_float($valueType)) {
-            return FilterGuard::float($valueType);
-        } elseif (is_bool($valueType)) {
-            return FilterGuard::bool($valueType);
-        } else if (is_array($valueType)) {
-            return FilterGuard::array($valueType);
-        } else if (is_object($valueType)) {
-            return FilterGuard::object($valueType);
+        switch (true) {
+            case is_string($value):
+                return FilterGuard::sanitizeString($value);
+            case is_int($value):
+                return FilterGuard::sanitizeInteger($value);
+            case is_float($value):
+                return FilterGuard::sanitizeFloat($value);
+            case is_bool($value):
+                return FilterGuard::sanitizeBoolean($value);
+            case is_array($value):
+                return FilterGuard::sanitizeArray($value);
+            case is_object($value):
+                return FilterGuard::sanitizeObject($value);
+            default:
+                return $value;
         }
     }
 }
