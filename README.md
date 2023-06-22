@@ -10,42 +10,45 @@ Include FilterGuard in your PHP project by including the main library file `Filt
 
 ```php
 <?php
+
 // Including FilterGuard library
-require_once 'FilterGuard.php';
+require_once 'vendor/autoload.php';
+
+use FilterGuard\FilterGuard;
 
 // Sanitizing a string
 $dirtyString = '<script>alert("XSS attack!");</script>';
-$cleanString = FilterGuard::string($dirtyString);
+$cleanString = FilterGuard::sanitizeString($dirtyString);
 var_dump($cleanString);
 
 // Sanitizing an integer
-$dirtyInteger = '123abc';
-$cleanInteger = FilterGuard::integer($dirtyInteger);
+$dirtyInteger = '123';
+$cleanInteger = FilterGuard::sanitizeInteger($dirtyInteger);
 var_dump($cleanInteger);
 
 // Sanitizing a float
 $dirtyFloat = '12.34xyz';
-$cleanFloat = FilterGuard::float($dirtyFloat);
+$cleanFloat = FilterGuard::sanitizeFloat($dirtyFloat);
 var_dump($cleanFloat);
 
 // Sanitizing a boolean value
 $dirtyBool = true;
-$cleanBool = FilterGuard::bool($dirtyBool);
+$cleanBool = FilterGuard::sanitizeBoolean($dirtyBool);
 var_dump($cleanBool);
 
 // Sanitizing an array
 $dirtyArray = ['<script>alert("XSS attack!");</script>', '123abc', '12.34xyz'];
-$cleanArray = FilterGuard::array($dirtyArray);
+$cleanArray = FilterGuard::sanitizeArray($dirtyArray);
 var_dump($cleanArray);
 
 // Sanitizing an object
 $dirtyObject = (object) ['dirtyString' => '<script>alert("XSS attack!");</script>'];
-$cleanObject = FilterGuard::object($dirtyObject);
+$cleanObject = FilterGuard::sanitizeObject($dirtyObject);
 var_dump($cleanObject);
 
 // Sanitizing an auto
 $dirtyValue = '<script>alert("XSS attack!");</script>';
-$cleanValue = FilterGuard::auto($dirtyValue);
+$cleanValue = FilterGuard::sanitizeAuto($dirtyValue);
 var_dump($cleanValue);
 ```
 
