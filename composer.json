@@ -1,1 +1,30 @@
+{
+  "name": "ddobren/filterguard",
+  "description": "FilterGuard is a simple PHP library for sanitizing data.",
+  "type": "library",
+  "license": "MIT",
+  "support": {
+    "issues": "https://github.com/ddobren/FilterGuard/issues",
+    "source": "https://github.com/ddobren/FilterGuard"
+  },
+  "authors": [
+    {
+      "name": "Dobren Dragojević",
+      "email": "dragojevicdobren@gmail.com"
+    },
+    {
+      "name": "Abhishek B",
+      "email": "abhishek.b4696@gmail.com"
+    }
+  ],
+  "require": {
+    "php": "^7.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "FilterGuard\\": "src/"
+    }
+  },
+  "minimum-stability": "stable"
+}
 
