@@ -38,22 +38,22 @@ class FilterGuard
      * Sanitizes an integer value.
      *
      * @param mixed $integerValue The integer value to sanitize.
-     * @return mixed              The sanitized integer value.
+     * @return int              The sanitized integer value.
      */
-    public static function sanitizeInteger($integerValue): mixed
+    public static function sanitizeInteger($integerValue): int
     {
         $integerValue = intval($integerValue);
         $integerValue = filter_var($integerValue, FILTER_SANITIZE_NUMBER_INT);
-        return $integerValue;
+        return (int) $integerValue;
     }
 
     /**
      * Sanitizes a float value.
      *
      * @param mixed $floatValue The float value to sanitize.
-     * @return mixed            The sanitized float value.
+     * @return float           The sanitized float value.
      */
-    public static function sanitizeFloat($floatValue): mixed
+    public static function sanitizeFloat($floatValue): float
     {
         $floatValue = floatval($floatValue);
         $floatValue = filter_var(
@@ -61,16 +61,16 @@ class FilterGuard
             FILTER_SANITIZE_NUMBER_FLOAT,
             FILTER_FLAG_ALLOW_FRACTION
         );
-        return $floatValue;
+        return (float) $floatValue;
     }
 
     /**
      * Sanitizes a boolean value.
      *
      * @param mixed $boolValue The boolean value to sanitize.
-     * @return mixed           The sanitized boolean value.
+     * @return bool          The sanitized boolean value.
      */
-    public static function sanitizeBoolean($boolValue): mixed
+    public static function sanitizeBoolean($boolValue): bool
     {
         $boolValue = boolval($boolValue);
         $boolValue = filter_var(
@@ -85,9 +85,9 @@ class FilterGuard
      * Sanitizes an array value recursively.
      *
      * @param mixed $arrayValue The array value to sanitize.
-     * @return mixed            The sanitized array value.
+     * @return array            The sanitized array value.
      */
-    public static function sanitizeArray($arrayValue): mixed
+    public static function sanitizeArray($arrayValue): array
     {
         $sanitizedArray = [];
         foreach ($arrayValue as $key => $value) {
@@ -104,9 +104,9 @@ class FilterGuard
      * Sanitizes an object value recursively.
      *
      * @param mixed $objectValue The object value to sanitize.
-     * @return mixed             The sanitized object value.
+     * @return object             The sanitized object value.
      */
-    public static function sanitizeObject($objectValue): mixed
+    public static function sanitizeObject($objectValue): object
     {
         $objectValue = (array) $objectValue;
         $objectValue = array_map(function ($value) {
@@ -121,7 +121,7 @@ class FilterGuard
      * @param mixed $value The value to sanitize.
      * @return mixed       The sanitized value.
      */
-    public static function sanitizeAuto($value)
+    public static function sanitizeAuto($value): mixed
     {
         switch (true) {
             case is_string($value):
