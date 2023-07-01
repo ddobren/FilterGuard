@@ -24,8 +24,10 @@ class FilterGuard
      * @param string $encoding    (optional) The character encoding to use. Defaults to "UTF-8".
      * @return string             The sanitized string value.
      */
-    public static function sanitizeString($stringValue, string $encoding = "UTF-8"): string
-    {
+    public static function sanitizeString(
+        $stringValue,
+        $encoding = "UTF-8"
+    ): string {
         $stringValue = strval($stringValue);
         $stringValue = strip_tags($stringValue);
         $stringValue = htmlspecialchars($stringValue, ENT_QUOTES, $encoding);
@@ -124,20 +126,82 @@ class FilterGuard
     public static function sanitizeAuto($value): mixed
     {
         switch (true) {
+            case self::isInt($value):
+                return self::sanitizeInteger($value);
+            case self::isFloat($value):
+                return self::sanitizeFloat($value);
+            case self::isBool($value):
+                return self::sanitizeBoolean($value);
             case is_string($value):
-                return FilterGuard::sanitizeString($value);
-            case is_int($value):
-                return FilterGuard::sanitizeInteger($value);
-            case is_float($value):
-                return FilterGuard::sanitizeFloat($value);
-            case is_bool($value):
-                return FilterGuard::sanitizeBoolean($value);
+                return self::sanitizeString($value);
             case is_array($value):
-                return FilterGuard::sanitizeArray($value);
+                return self::sanitizeArray($value);
             case is_object($value):
-                return FilterGuard::sanitizeObject($value);
+                return self::sanitizeObject($value);
             default:
                 return $value;
         }
+    }
+    /**
+     * Checks if a value is an integer.
+     *
+     * @param mixed $value The value to check.
+     *
+     * @return bool Returns true if the value is an integer, false otherwise.
+     */
+    private static function isInt($value): bool
+    {
+        if (is_int($value)) {
+            return true;
+        }
+        if (is_string($value)) {
+            $value = trim($value);
+            return preg_match('/^[0-9]+$/', $value) === 1;
+        }
+        return false;
+    }
+
+    /**
+     * Checks if a value is a float.
+     *
+     * @param mixed $value The value to check.
+     *
+     * @return bool Returns true if the value is a float, false otherwise.
+     */
+    private static function isFloat($value): bool
+    {
+        if (is_float($value)) {
+            return true;
+        }
+        if (is_string($value)) {
+            $value = trim($value);
+            return preg_match('/^[0-9]+\.[0-9]+$/', $value) === 1;
+        }
+        return false;
+    }
+
+    /**
+     * Checks if a value is a boolean.
+     *
+     * @param mixed $value The value to check.
+     *
+     * @return bool Returns true if the value is a boolean, false otherwise.
+     */
+    private static function isBool($value): bool
+    {
+        if (is_bool($value)) {
+            return true;
+        }
+        if (is_string($value)) {
+            $value = trim($value);
+            if (
+                preg_match('/^true$/', $value) ||
+                preg_match('/^false$/', $value)
+            ) {
+                return true;
+            }
+            return false;
+        }
+        return false;
     }
 }
