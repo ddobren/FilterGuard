@@ -16,12 +16,12 @@ class FilterGuardTest extends TestCase
         $dirtyStr = '<script>alert(\'Hacked\')</script>';
         $result = FilterGuard::sanitizeString($dirtyStr);
         $expected = "alert(&#039;Hacked&#039;)";
-        $this->assertEquals($expected, $result);
+        $this->assertSame($expected, $result);
         // test 2
         $dirtyStr = "<b>HACK</b>";
         $result = FilterGuard::sanitizeString($dirtyStr);
         $expected = "HACK";
-        $this->assertEquals($expected, $result);
+        $this->assertSame($expected, $result);
     }
     /**
      * @test
@@ -80,6 +80,11 @@ class FilterGuardTest extends TestCase
         $result = FilterGuard::sanitizeBoolean($dirtyBool);
         $expected = false;
         $this->assertSame($expected, $result);
+        // test 4
+        $dirtyBool = false;
+        $result = FilterGuard::sanitizeBoolean($dirtyBool);
+        $expected = false;
+        $this->assertSame($expected, $result);
     }
     /**
      * @test
@@ -95,7 +100,7 @@ class FilterGuardTest extends TestCase
             "key" => "ATTACK",
             "xss" => "alert(&#039;XSS&#039;)",
         ];
-        $this->assertEquals($expected, $result);
+        $this->assertSame($expected, $result);
     }
 
     /**
@@ -107,17 +112,38 @@ class FilterGuardTest extends TestCase
         $dirtyArray = [
             "key" => "<b>ATTACK</b>",
             "xss" => '<script>alert(\'XSS\')</script>',
+            "int" => "7335",
+            "float" => "67.09",
+            "bool" => "true",
         ];
         $result = FilterGuard::sanitizeAuto($dirtyArray);
         $expected = [
             "key" => "ATTACK",
             "xss" => "alert(&#039;XSS&#039;)",
+            "int" => 7335,
+            "float" => 67.09,
+            "bool" => true,
         ];
-        $this->assertEquals($expected, $result);
+        $this->assertSame($expected, $result);
         // test 2
         $dirtyStr = "<b>HACK</b>";
         $result = FilterGuard::sanitizeAuto($dirtyStr);
         $expected = "HACK";
-        $this->assertEquals($expected, $result);
+        $this->assertSame($expected, $result);
+        // test 3
+        $dirtyInt = "7226";
+        $result = FilterGuard::sanitizeAuto($dirtyInt);
+        $expected = 7226;
+        $this->assertSame($expected, $result);
+        // test 4
+        $dirtyFloat = "7226.99";
+        $result = FilterGuard::sanitizeAuto($dirtyFloat);
+        $expected = 7226.99;
+        $this->assertSame($expected, $result);
+        // test 5
+        $dirtyFloat = "true";
+        $result = FilterGuard::sanitizeAuto($dirtyFloat);
+        $expected = true;
+        $this->assertSame($expected, $result);
     }
 }
